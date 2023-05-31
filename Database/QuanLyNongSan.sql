@@ -10,7 +10,7 @@ create table admin (
 	name nvarchar(50) not null
 )
 
-insert into admin values ('admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', N'Ngọc Thắng')
+insert into admin values ('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', N'Ngọc Thắng')
 
 create table users (
 	id int IDENTITY(1,1) PRIMARY KEY,

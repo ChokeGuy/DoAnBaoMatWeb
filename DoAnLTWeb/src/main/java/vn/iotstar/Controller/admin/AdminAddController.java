@@ -1,6 +1,7 @@
 package vn.iotstar.Controller.admin;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import vn.iotstar.Entity.Admin;
 import vn.iotstar.Service.IAdminService;
 import vn.iotstar.Service.Impl.AdminServiceImpl;
+import vn.iotstar.Dao.Impl.AdminDaoImpl;
 @WebServlet(urlPatterns = { "/admin/admin/add" })
 public class AdminAddController extends HttpServlet {
 
@@ -20,6 +22,14 @@ public class AdminAddController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		String username = req.getParameter("admin-username");
+//		String password = req.getParameter("admin-password");
+//		Admin admin = new Admin();
+//		admin.setName(req.getParameter("name"));
+//		if(adminService.checkAdminLogin(username,password) != null) {
+//			RequestDispatcher dispatcher = req.getRequestDispatcher("/view/admin/addadmin.jsp");
+//			dispatcher.forward(req, resp);
+//		}
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/view/admin/addadmin.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -32,11 +42,19 @@ public class AdminAddController extends HttpServlet {
 		String admin_password = req.getParameter("admin-password");
 		String admin_name = req.getParameter("admin-name");
 		Admin admin = new Admin();
+		
 		admin.setUsername(admin_username);
-		admin.setPassword(admin_password);
-		admin.setName(admin_name);
-		adminService.insert(admin);
-		resp.sendRedirect(req.getContextPath() + "/admin/admin/list");
+		try {
+			String hashPassword = AdminDaoImpl.hashPassword(admin_password);
+			admin.setPassword(hashPassword);
+			admin.setName(admin_name);
+			adminService.insert(admin);
+			resp.sendRedirect(req.getContextPath() + "/admin/admin/list");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return;
+		}
+
 	}
 
 }

@@ -24,8 +24,10 @@ body {
 	display:flex!important;
 }
 .dropdown-menu-user{
+	width:100%;
 	position: absolute;
     top: 100%;
+    right:12%;
     z-index: 1000;
     min-width: 160px;
 }
@@ -2554,9 +2556,8 @@ a.aa-product-img img {
 .user-dropdown{
 	position:relative;
 }
-.left-size{
+.left-size{	
 	height: 35px;
-	left:290px;
 	justify-content:center;
 	align-items:center;
 	border-radius:4px;

@@ -9,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="autocomplete" content="off">
 <title>Bán nông sản</title>
 <!-- CSS -->
 <link href="${url}/css/pace.min.css" rel="stylesheet" />

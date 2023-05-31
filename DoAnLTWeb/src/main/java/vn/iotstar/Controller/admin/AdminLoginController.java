@@ -1,6 +1,7 @@
 package vn.iotstar.Controller.admin;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import vn.iotstar.Entity.Admin;
 import vn.iotstar.Service.IAdminService;
@@ -32,6 +35,12 @@ public class AdminLoginController extends HttpServlet {
 
 		String username = request.getParameter("admin-username");
 		String password = request.getParameter("admin-password");
+		
+		String filteredUsername = StringEscapeUtils.escapeHtml4(username);
+		URLEncoder.encode(filteredUsername, "UTF-8");
+		
+		String filteredPassword = StringEscapeUtils.escapeHtml4(password);
+		URLEncoder.encode(filteredPassword, "UTF-8");
 		Admin admin = new Admin();
 		admin.setName(request.getParameter("name"));
 		Admin admin_check = adminservice.checkAdminLogin(username, password);

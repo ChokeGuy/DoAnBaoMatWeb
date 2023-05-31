@@ -31,7 +31,7 @@ public class User implements Serializable {
 		this.created = created;
 	}
 
-	public User(int id, String name, String email, String phone, String username, String password, String created) {
+	public User(int id, String name, String email, String phone, String username, String password, String created,String salt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -40,6 +40,7 @@ public class User implements Serializable {
 		this.username = username;
 		this.password = password;
 		this.created = created;
+		this.salt = salt;
 	}
 
 	public int getId() {
@@ -125,4 +126,15 @@ public class User implements Serializable {
 	
 	@Column(name="created")
 	private String created;
+	
+	@Column(name="salt")
+	private String salt;
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 }

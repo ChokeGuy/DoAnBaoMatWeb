@@ -34,10 +34,11 @@
                 <div class="aa-myaccount-login">
                 <h4>Đăng nhập</h4>
                  <form class="aa-login-form" name="loginform" onsubmit="validate();" action="${pageContext.request.contextPath}/view/client/login" method="post">
+                  <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
                   <label for="">Username<span>*</span></label>
-                   <input type="text" placeholder="Username" name="username">
+                   <input type="text" placeholder="Username" name="username" autocomplete="off">
                    <label for="">Mật khẩu<span>*</span></label>
-                    <input type="password" placeholder="Password" name="password">
+                    <input type="password" placeholder="Password" name="password" autocomplete="off">
                     <p class="rememberme" style="display: block"><input type="checkbox" id="rememberme"> Ghi nhớ </p> 
      
                     <p style="color:red; display:block">
@@ -68,7 +69,6 @@
 		if (day < 10) day = "0" + day;
 		
 		var today = year + "-" + month + "-" + day;
-		
 		
 		document.getElementById('the-date').value = today;
 </script>

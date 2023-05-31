@@ -33,13 +33,23 @@ public class UpdateCartController extends HttpServlet {
 	public void doPost(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
 		HttpSession session = req.getSession();
 		Order order = (Order) session.getAttribute("order");
+		if(order == null) {
+			resp.sendRedirect("/DoAnLTWeb");
+            return;
+		}
 		List<Item> listItems = order.getItems();
 		order.setSumPrice(0);
 		for(Item item: listItems)
 		{
-			item.setQty(Integer.parseInt(req.getParameter(Integer.toString(item.getProduct().getId()))));
-			item.setPrice((Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*(Double.parseDouble(Integer.toString(item.getProduct().getDiscount()))/100))*Double.parseDouble(req.getParameter(Integer.toString(item.getProduct().getId()))));
-			order.setSumPrice(order.getSumPrice() + item.getPrice());
+			try {
+				String id = req.getParameter(Integer.toString(item.getProduct().getId()));
+				item.setQty(Integer.parseInt(id));
+				item.setPrice((Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*(Double.parseDouble(Integer.toString(item.getProduct().getDiscount()))/100))*Double.parseDouble(req.getParameter(Integer.toString(item.getProduct().getId()))));
+				order.setSumPrice(order.getSumPrice() + item.getPrice());
+			} catch(Exception e) {
+				RequestDispatcher dispatcher = req.getRequestDispatcher(req.getContextPath() + "/view/client/404.jsp");
+				dispatcher.forward(req, resp);
+			}
 		}
 		order.setItems(listItems);
 		session.setAttribute("order", order);

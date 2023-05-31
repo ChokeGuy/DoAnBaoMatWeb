@@ -36,16 +36,16 @@
                  <h4>Đăng ký</h4>
                  <form name="formRegister" class="aa-login-form" method="post" action="${pageContext.request.contextPath}/view/client/register" >
                     <label for="">Họ tên<span>*</span></label>
-                    <input type="text" placeholder="Name" name="name" required>   
+                    <input type="text" placeholder="Name" name="name" autocomplete="off" required>   
                      <label for="">Email <span>*</span></label>
-                    <input type="text" placeholder="useremail@gmail.com" name="email" required>
+                    <input type="text" placeholder="useremail@gmail.com" autocomplete="off" name="email" required>
                     <label for="">Số điện thoại<span>*</span></label>
-                    <input type="text" placeholder="Số điện thoại" name="phone" required>   
+                    <input type="text" placeholder="Số điện thoại" autocomplete="off" name="phone" required>   
                      <label for="">Username<span>*</span></label>
-                    <input type="text" placeholder="Username" name="username" required>
+                    <input type="text" placeholder="Username" autocomplete="off" name="username" required>
                     <label for="">Mật khẩu<span>*</span></label>  
-                    <input type="password" placeholder="Password" name="password" required>     
-                    <input type="date" style="display: none" placeholder="Password" name="created" id="the-date">             
+                    <input type="password" placeholder="Password" autocomplete="off" name="password" required>     
+                    <input type="date" id="the-date" style="display: none;" name="created">             
                       
                     <p style="color:red; display: block;"><%=(request.getAttribute("errMessage") == null) ? ""
         			: request.getAttribute("errMessage")%></p>
@@ -63,23 +63,26 @@
    </div>
  </section>
  <!-- / Cart view section -->
-
-<!--  end content-->
    <script>
-		var date = new Date();
-		
-		var day = date.getDate();
-		var month = date.getMonth() + 1;
-		var year = date.getFullYear();
-		
-		if (month < 10) month = "0" + month;
-		if (day < 10) day = "0" + day;
-		
-		var today = year + "-" + month + "-" + day;
-		
-		
-		document.getElementById('the-date').value = today;
+// Lấy ngày tháng năm hiện tại
+   var today = new Date();
+
+   // Lấy thông tin ngày, tháng, năm
+   var day = today.getDate();
+   var month = today.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần +1
+   var year = today.getFullYear();
+
+   // Định dạng ngày và tháng thành chuỗi 2 ký tự (vd: 01, 02, ..., 10, 11, ...)
+   day = day < 10 ? '0' + day : day;
+   month = month < 10 ? '0' + month : month;
+
+   // Định dạng ngày/tháng/năm
+	var formattedDate = year + "-" + month + "-" + day;
+	
+   document.getElementById('the-date').value = formattedDate;
 </script>
+<!--  end content-->
+
 <!--  footer-->
 <%--  <jsp:include page = "./footer/footer.jsp" flush = "true" />
  --%><!-- end footer-->

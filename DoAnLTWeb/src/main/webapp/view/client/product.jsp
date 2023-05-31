@@ -1,5 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%
+  // Thiết lập tiêu chuẩn CSP
+  response.setHeader("Content-Security-Policy", "img-src 'self'; script-src 'self'");
+%>
 <c:url value = "/view/client/assets" var="url"/>
   <!-- Start header section -->
 <%-- <%--   <jsp:include page = "./header/mainHeader.jsp" flush = "true" /> --%>

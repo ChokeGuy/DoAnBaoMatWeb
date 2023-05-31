@@ -1,6 +1,6 @@
 package vn.iotstar.Controller;
-
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import vn.iotstar.Entity.User;
 import vn.iotstar.Service.IUserService;
@@ -35,12 +37,22 @@ public class LoginController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException {	
 		response.setContentType("text/html");
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=UTF-8");
+		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		if(username == null || username.isEmpty()||password == null || password.isEmpty()) {
+			response.sendRedirect("/DoAnLTWeb");
+            return;
+		}
+		String filteredUsername = StringEscapeUtils.escapeHtml4(username);
+		URLEncoder.encode(filteredUsername, "UTF-8");
+		
+		String filteredPassword = StringEscapeUtils.escapeHtml4(password);
+		URLEncoder.encode(filteredPassword, "UTF-8");
 		try {
 			User u = userservice.checkLogin(username, password);
 			if (u != null) {
@@ -53,7 +65,8 @@ public class LoginController extends HttpServlet {
 				rd.forward(request, response);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.sendRedirect("/DoAnLTWeb");
+            return;
 		}
 	}
 

@@ -80,15 +80,20 @@ public class CategoryDaoImpl implements ICategoryDao{
 	}
 	@Override
 	public List<Category> getCateByProduct(int id) {
-		List<Category> products_cate = new ArrayList<Category>();
-		EntityManager enma = JpaConfig.getEntityManager();
-		String jpql = "SELECT c.name FROM Category c,Product p WHERE c.id = p.category_id and p.id LIKE :cateid";
-		TypedQuery<String> query= enma.createQuery(jpql, String.class);
-		query.setParameter("cateid",id);
-		String name = query.getSingleResult();
-		Category catagory_product = new Category();
-		catagory_product.setName(name);
-		products_cate.add(catagory_product);
-		return products_cate;
+		try {
+			List<Category> products_cate = new ArrayList<Category>();
+			EntityManager enma = JpaConfig.getEntityManager();
+			String jpql = "SELECT c.name FROM Category c,Product p WHERE c.id = p.category_id and p.id LIKE :cateid";
+			TypedQuery<String> query= enma.createQuery(jpql, String.class);
+			query.setParameter("cateid",id);
+			String name = query.getSingleResult();
+			Category catagory_product = new Category();
+			catagory_product.setName(name);
+			products_cate.add(catagory_product);
+			return products_cate;
+		} catch(Exception e) {
+			return null;
+		}
+	
 	}
 }

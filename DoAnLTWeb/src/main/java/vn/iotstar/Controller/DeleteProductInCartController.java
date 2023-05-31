@@ -23,13 +23,30 @@ public class DeleteProductInCartController extends HttpServlet{
 	IProductService productservice = new ProductServiceImpl();
 	DecimalFormat df = new DecimalFormat("#.000");
 	DecimalFormat df1 = new DecimalFormat("#.0");
-	
+	public static boolean isInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            // Nếu không thể chuyển đổi thành số nguyên, ném ra ngoại lệ NumberFormatException
+            return false;
+        }
+    }
 	@Override
 	protected void doGet(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
+		if(id == null||id == ""||!isInteger(id)) {
+			resp.sendRedirect("/DoAnLTWeb");
+			return;
+		}
+		
 		HttpSession session = req.getSession(true);
 		Product product = productservice.get(Integer.parseInt(id));
 		Order order = (Order) session.getAttribute("order");
+		if(order == null) {
+			resp.sendRedirect(req.getContextPath());
+			return;
+		}
 		List<Item> listItems = order.getItems();
 		for(Item item: listItems)
 		{

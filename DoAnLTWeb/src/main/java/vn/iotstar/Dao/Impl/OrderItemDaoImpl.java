@@ -23,9 +23,7 @@ public class OrderItemDaoImpl implements IOrderItemDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			trans.rollback();
-			throw e;
-		} finally {
-			enma.close();
+			
 		}
 	}
 

@@ -154,6 +154,10 @@
                    <br>
                    		<p style="color: red">Bạn đã đặt hàng thành công!</p>
                    </c:if>
+                    <c:if test="${sessionScope.username == null && sessionScope.order == null}">
+                   <br>
+                   		<p style="color: red">Vui lòng đăng nhập tài khoản!</p>
+                   </c:if>
                 </div>
               </div>
             </div>

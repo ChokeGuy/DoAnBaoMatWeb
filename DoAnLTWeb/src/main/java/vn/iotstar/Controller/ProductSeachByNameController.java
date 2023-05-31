@@ -1,6 +1,7 @@
 package vn.iotstar.Controller;
 
 import java.io.IOException;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,7 @@ import vn.iotstar.Service.ICategoryService;
 import vn.iotstar.Service.IProductService;
 import vn.iotstar.Service.Impl.CategoryServiceImpl;
 import vn.iotstar.Service.Impl.ProductServiceImpl;
-
-
+import vn.iotstar.UrlUtil.UrlEncoded;
 @WebServlet(urlPatterns = { "/view/client/product/search" })
 public class ProductSeachByNameController extends HttpServlet {
 	/**
@@ -31,7 +31,13 @@ public class ProductSeachByNameController extends HttpServlet {
 	DecimalFormat df = new DecimalFormat("#.000");
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String name=req.getParameter("s");
+		
+		String name=UrlEncoded.sanitizeURLParameter(req.getParameter("s"));
+
+		if (name == null || name.equals("")|| !UrlEncoded.isSafeParameter(name)) {
+		    resp.sendRedirect("/DoAnLTWeb");
+		    return;
+		}
 		List<Category> cateList = cateService.findAll();
 		req.setAttribute("catelist", cateList);
 		

@@ -27,12 +27,19 @@
                   <li><a href="product.jsp">TINH DẦU</a></li>
                 </ul>
               </li>
-              <li class="aa-search" style="left:0;"><!-- search box -->
+               <li class="aa-search" style="left:0;"><!-- search box -->
               <a class="aa-search-box">
-                <form action="${pageContext.request.contextPath}/view/client/product/search" method="GET">
-                  <input type="text" name="s" id="" placeholder="Tìm kiếm sản phẩm..">
+                <form action="${pageContext.request.contextPath}/view/client/product/search" method="GET" onsubmit="encodeSearchInput(event)">
+                  <input type="text" name="s" id="searchInput" placeholder="Tìm kiếm sản phẩm.." />
                  <button class="serach-box"><span class="fa fa-search"></span></button>
                 </form>
+                <script>
+  				function encodeSearchInput(event) {
+    				var searchInput = document.getElementById("searchInput");
+   					var encodedValue = encodeURIComponent(searchInput.value); // Mã hóa giá trị nhập vào
+    				searchInput.value = encodedValue; // Gán giá trị đã mã hóa lại cho input
+  				}
+				</script>
               </a>
               <!-- / search box -->
              </li>
@@ -51,7 +58,7 @@
                     href="#"
                     class="nav-link text-white nav-item__link mb-0 top-fitting focus-user"
                     data-toggle="dropdown"
-                    style="left: 170%;">
+                    style="position:relative">
                     <i class="fa-solid fa-user icon-user"></i>                   
                     ${username}
                     <i class="fa-solid fa-sort-down icon-arrow"></i>

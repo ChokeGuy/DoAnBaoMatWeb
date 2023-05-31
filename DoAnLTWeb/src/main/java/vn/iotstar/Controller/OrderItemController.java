@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import vn.iotstar.Entity.Item;
 import vn.iotstar.Entity.Order;
@@ -42,14 +44,14 @@ public class OrderItemController extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		resp.setContentType("text/html;charset=UTF-8");
 		String tr_usersession = req.getParameter("orderitem_usersession");
-		String tr_username = req.getParameter("orderitem_name");
+		String tr_username = filterSpecialCharacters(req.getParameter("orderitem_name"));
 		String tr_usermail = req.getParameter("orderitem_email");
-		String tr_userphone = req.getParameter("orderitem_phone");
+		String tr_userphone = filterSpecialCharacters(req.getParameter("orderitem_phone"));
 		String tr_useraddress = req.getParameter("orderitem_address");
 		String tr_usermess = req.getParameter("orderitem_mess");
 		String tr_amount = req.getParameter("orderitem_amount");
 		String tr_payment = req.getParameter("orderitem_payment");
-		String tr_created = req.getParameter("orderitem_created");
+		String tr_created = filterSpecialCharacters(req.getParameter("orderitem_created"));
 
 		OrderItem orderitem = new OrderItem();
 		orderitem.setUser_session(tr_usersession);
@@ -78,7 +80,7 @@ public class OrderItemController extends HttpServlet {
 			}
 		}
 		HttpSession session = req.getSession(true);
-		Order order = (Order) session.getAttribute("order");
+Order order = (Order) session.getAttribute("order");
 		List<Item> listItems = order.getItems();
 		for(Item item: listItems)
 		{
@@ -99,5 +101,12 @@ public class OrderItemController extends HttpServlet {
 		
 	}
 
-
+	// Hàm để lọc ký tự đặc biệt trong một chuỗi
+	public String filterSpecialCharacters(String input) {
+	    // Biểu thức chính quy chỉ chấp nhận các ký tự chữ cái, số và khoảng trắng
+	    String regex = "[^a-zA-Z0-9\\s]";
+	    Pattern pattern = Pattern.compile(regex);
+	    Matcher matcher = pattern.matcher(input);
+	    return matcher.replaceAll("");
+	}
 }

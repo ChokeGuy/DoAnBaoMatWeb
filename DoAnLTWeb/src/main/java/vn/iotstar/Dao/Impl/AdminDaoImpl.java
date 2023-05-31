@@ -9,8 +9,29 @@ import javax.persistence.TypedQuery;
 import vn.iotstar.Dao.IAdminDao;
 import vn.iotstar.Entity.Admin;
 import vn.iotstar.JPAConfig.JpaConfig;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 public class AdminDaoImpl implements IAdminDao {
+	  public static String hashPassword(String password) throws NoSuchAlgorithmException {
+	        MessageDigest md = MessageDigest.getInstance("SHA-256");
+	        byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
+	        return bytesToHex(hashedBytes);
+	    }
+	  private static String bytesToHex(byte[] bytes) {
+		    StringBuilder sb = new StringBuilder();
+		    for (int i = 0; i < bytes.length; i++) {
+		        String hex = Integer.toHexString(bytes[i] & 0xFF);
+		        if (hex.length() == 1) {
+		            sb.append("0");
+		        }
+		        sb.append(hex);
+		    }
+		    return sb.toString();
+		}
+
 	@Override
 	public void insert(Admin admin) {
 		EntityManager enma = JpaConfig.getEntityManager();
@@ -88,12 +109,13 @@ public class AdminDaoImpl implements IAdminDao {
 	@Override
 	public Admin checkAdminLogin(String username, String password) {
 		EntityManager enma = JpaConfig.getEntityManager();
-		String jpql = "SELECT a FROM Admin a WHERE a.username like :username and a.password like :password";
-		TypedQuery<Admin> query= enma.createQuery(jpql, Admin.class);
-		query.setParameter("username",username);
-		query.setParameter("password",password);
 		try {
-		return query.getSingleResult();
+			String newPassword = hashPassword(password);
+			String jpql = "SELECT a FROM Admin a WHERE a.username like :username and a.password like :password";
+			TypedQuery<Admin> query= enma.createQuery(jpql, Admin.class);
+			query.setParameter("username",username);
+			query.setParameter("password",newPassword);
+			return query.getSingleResult();
 		}
 		catch(Exception e) {
 			return null;

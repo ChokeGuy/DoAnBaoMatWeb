@@ -33,65 +33,80 @@ public class AddToCartController extends HttpServlet {
 		int n= 0;
 		int qty = 1;
 		String id;
-		
-		if(request.getParameter("product-id")!=null) {
-			id = request.getParameter("product-id");
-			Product product = productService.get(Integer.parseInt(id));;
-			if(product != null) {
-				if(request.getParameter("qty")!=null) {
-					qty = Integer.parseInt(request.getParameter("qty"));
-				}
-				
-				HttpSession session = request.getSession();
-				if(session.getAttribute("order") == null) {
-					Order order = new Order();
-					List<Item> listItems = new ArrayList<Item>();
-					
-					Item item = new Item();
-					item.setQty(qty);
-					item.setProduct(product);
-					item.setPrice(Double.parseDouble(product.getPrice()) - Double.parseDouble(product.getPrice())*((double)product.getDiscount())/100);//getDiscount là số
-					order.setSumPrice(0);
-					order.setSumPrice(order.getSumPrice() + item.getPrice());
-					listItems.add(item);
-					order.setItems(listItems);
-					n = listItems.size();
-					session.setAttribute("length_order",n);
-					session.setAttribute("order", order);
-					session.setAttribute("sumprice", df.format(order.getSumPrice()));
-				} else {
-					Order order = (Order) session.getAttribute("order");
-					List<Item> listItems = order.getItems();
-					boolean check = false;
-					for(Item item : listItems) {
-						if(item.getProduct().getId() == product.getId()) 
-						{
-							item.setQty(item.getQty() + qty);
-							order.setSumPrice(order.getSumPrice() + Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
-							item.setPrice(item.getPrice() + (Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100));
-							check = true;
-						}
+		String Referer = request.getHeader("Referer");
+		if(Referer != null && Referer.startsWith("https://localhost:8080/DoAnLTWeb/")) {
+			if(request.getParameter("product-id")!=null) {
+				id = request.getParameter("product-id");
+				Product product = productService.get(Integer.parseInt(id));;
+				if(product != null) {
+					if(request.getParameter("qty")!=null) {
+						qty = Integer.parseInt(request.getParameter("qty"));
 					}
-					if(check == false) {
+					
+					HttpSession session = request.getSession();
+					if(session.getAttribute("order") == null) {
+						Order order = new Order();
+						List<Item> listItems = new ArrayList<Item>();
+						
 						Item item = new Item();
 						item.setQty(qty);
 						item.setProduct(product);
-						item.setPrice(Double.parseDouble(product.getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
-						order.setSumPrice(order.getSumPrice() + Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
+						item.setPrice(Double.parseDouble(product.getPrice()) - Double.parseDouble(product.getPrice())*((double)product.getDiscount())/100);//getDiscount là số
+						order.setSumPrice(0);
+						order.setSumPrice(order.getSumPrice() + item.getPrice());
 						listItems.add(item);
+						order.setItems(listItems);
+						n = listItems.size();
+						session.setAttribute("length_order",n);
+						session.setAttribute("order", order);
+						session.setAttribute("sumprice", df.format(order.getSumPrice()));
+					} else {
+						Order order = (Order) session.getAttribute("order");
+						List<Item> listItems = order.getItems();
+						boolean check = false;
+						for(Item item : listItems) {
+							if(item.getProduct().getId() == product.getId()) 
+							{
+								item.setQty(item.getQty() + qty);
+								order.setSumPrice(order.getSumPrice() + Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
+								item.setPrice(item.getPrice() + (Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100));
+								check = true;
+							}
+						}
+						if(check == false) {
+							Item item = new Item();
+							item.setQty(qty);
+							item.setProduct(product);
+							item.setPrice(Double.parseDouble(product.getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
+							order.setSumPrice(order.getSumPrice() + Double.parseDouble(item.getProduct().getPrice()) - Double.parseDouble(item.getProduct().getPrice())*((double)item.getProduct().getDiscount())/100);
+							listItems.add(item);
+						}
+						n = listItems.size();
+						if(n == 0) {
+							
+						}
+						session.setAttribute("length_order",n);
+						session.setAttribute("order", order);
+						session.setAttribute("sumprice", df.format(order.getSumPrice()));
+						
+						
 					}
-					n = listItems.size();
-					session.setAttribute("length_order",n);
-					session.setAttribute("order", order);
-					session.setAttribute("sumprice", df.format(order.getSumPrice()));
 				}
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/client/cart.jsp");
+				dispatcher.forward(request, response);
+			} else {
+				HttpSession session = request.getSession();
+				if(session!= null) {
+					session.removeAttribute("length_order");
+					session.removeAttribute("order");
+					session.removeAttribute("sumprice");
+				}
+				
+				response.sendRedirect(request.getContextPath() + "/");
 			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/client/cart.jsp");
-			dispatcher.forward(request, response);
 		} else {
-			response.sendRedirect(request.getContextPath() + "/");
-		}
-		
-	}
+			response.sendRedirect("/DoAnLTWeb");
 
+		}
+	}	
 }

@@ -6,11 +6,11 @@ USE QuanLyNongSan
 create table admin (
 	id int IDENTITY(1,1) PRIMARY KEY,
 	username nvarchar(50) UNIQUE not null,
-	password nvarchar(50) not null,
+	password nvarchar(100) not null,
 	name nvarchar(50) not null
 )
 
-insert into admin values ('admin', '123456', N'Ngọc Thắng')
+insert into admin values ('admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', N'Ngọc Thắng')
 
 create table users (
 	id int IDENTITY(1,1) PRIMARY KEY,
@@ -18,7 +18,8 @@ create table users (
 	email nvarchar(50) UNIQUE not null,
 	phone nvarchar(20) not null,
 	username nvarchar(50) UNIQUE not null,
-	password nvarchar(50) not null,
+	password nvarchar(100) not null,
+	salt nvarchar(100) not null,
 	created date null
 )
 

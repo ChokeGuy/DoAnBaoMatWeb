@@ -1,4 +1,5 @@
 package vn.iotstar.Dao.Impl;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 
@@ -11,6 +12,16 @@ import vn.iotstar.Entity.User;
 import vn.iotstar.JPAConfig.JpaConfig;
 
 public class UserDaoImpl implements IUserDao {
+	
+	// Hàm mã hóa mật khẩu
+    public static String hashPassword(String password,String salt) {
+        // Số vòng lặp (tăng số vòng lặp tăng độ mạnh của thuật toán)
+
+        // Mã hóa mật khẩu bằng thuật toán BCrypt
+        String hashedPassword = BCrypt.hashpw(password,salt);
+
+        return hashedPassword;
+    }
 
 	@Override
 	public void insert(User user) {
@@ -92,12 +103,17 @@ public class UserDaoImpl implements IUserDao {
 	@Override
 	public User checkLogin(String username, String password) {
 		EntityManager enma = JpaConfig.getEntityManager();
-		String jpql = "SELECT u FROM User u WHERE u.username like :username and u.password like :password";
-		TypedQuery<User> query= enma.createQuery(jpql, User.class);
+		String username_jpql = "SELECT u FROM User u WHERE u.username like :username";
+		TypedQuery<User> query= enma.createQuery(username_jpql, User.class);
 		query.setParameter("username",username);
-		query.setParameter("password",password);
 		try {
-			 return query.getSingleResult();
+			 User u = query.getSingleResult();
+			 String newpassword = hashPassword(password,u.getSalt());
+			 String password_jpql = "SELECT u FROM User u WHERE u.username like :username and u.password like :password";
+			 TypedQuery<User> newquery= enma.createQuery(password_jpql, User.class);
+			 newquery.setParameter("username",username);
+			 newquery.setParameter("password",newpassword);
+			 return newquery.getSingleResult();
 		}
 		catch(Exception e) {	
 			e.printStackTrace();
@@ -129,14 +145,16 @@ public class UserDaoImpl implements IUserDao {
 		try {
 			return query.getSingleResult();
 		}catch(Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
 	@Override
 	public int RegisterUser(User user) {
+		String salt =  BCrypt.gensalt(12);
+		String password = hashPassword(user.getPassword(),salt);
 		User newuser = new User(user.getName(),user.getEmail(),user.getPhone()
-				,user.getUsername(),user.getPassword(),user.getCreated());
+				,user.getUsername(),password,user.getCreated());
+		newuser.setSalt(salt);
 		EntityManager enma = JpaConfig.getEntityManager();
 		EntityTransaction trans = enma.getTransaction();
 		int check = 0;

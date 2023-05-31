@@ -71,7 +71,8 @@
 						<div class="form-group">
 							<label for="exampleInputUsername" class="sr-only">Username</label>
 							<div class="position-relative has-icon-right">
-								<input type="text" id="exampleInputUsername"
+								<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
+								<input type="text" id="exampleInputUsername" autocomplete="off"
 									class="form-control input-shadow" placeholder="Username"
 									name="admin-username" required>
 								<div class="form-control-position">
@@ -82,7 +83,7 @@
 						<div class="form-group">
 							<label for="exampleInputPassword" class="sr-only">Password</label>
 							<div class="position-relative has-icon-right">
-								<input type="password" id="exampleInputPassword"
+								<input type="password" id="exampleInputPassword" autocomplete="off"
 									class="form-control input-shadow" placeholder="Password"
 									name="admin-password" required>
 								<div class="form-control-position">

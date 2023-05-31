@@ -1,5 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%
+  // Thiết lập tiêu chuẩn CSP
+  response.setHeader("Content-Security-Policy", "img-src 'self'; script-src 'self'");
+%>
 <c:url value = "/view/client/assets" var="url"/>
   <!-- Start header section -->
 <%--   <jsp:include page = "./header/mainHeader.jsp" flush = "true" /> --%>
@@ -50,7 +54,7 @@
                         <td><a href="${pageContext.request.contextPath}/view/client/product-detail?id=${item.product.id}"><img src="${pageContext.request.contextPath}/view/client/assets/images/products/img-test/${item.product.image_link}" alt="img${item.product.name }"></a></td>
                         <td><a class="aa-cart-title" href="${pageContext.request.contextPath}/view/client/product-detail?id=${item.product.id}">${item.product.name }</a></td>
                         <td>${item.product.price} VNĐ</td>
-                        <td><input class="aa-cart-quantity" type="number" name="${item.product.id}" value="${item.qty}" min=1></td>
+                        <td><input class="aa-cart-quantity" type="number" name="${item.product.id}" required value="${item.qty}" min=1></td>
                         <td>${item.product.discount} %</td>
                         <td>${item.price}00 VNĐ</td>
                          <td><a class="remove" href="${pageContext.request.contextPath}/view/client/cart-delete?id=${item.product.id}">Xóa</a></td>

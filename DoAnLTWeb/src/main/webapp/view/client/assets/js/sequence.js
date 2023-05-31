@@ -459,8 +459,9 @@ function defineSequence(imagesLoaded, Hammer) {
       if (element === undefined) {
         return;
       }
-
-      return new RegExp('(\\s|^)' + name + '(\\s|$)').test(element.className);
+	  const encodedName = encodeURIComponent(name).replace(/[!'()*]/g, escape);
+	  const regex = new RegExp(`(\\s|^)${encodedName}(\\s|$)`);
+      return regex.test(element.className);
     }
 
     /**
@@ -522,9 +523,10 @@ function defineSequence(imagesLoaded, Hammer) {
       for (i = 0; i < elementsLength; i++) {
 
         element = elements[i];
-
+		
         if (hasClass(element, name) === true) {
-          element.className = element.className.replace(new RegExp('(\\s|^)' + name + '(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
+		  const encodedName = encodeURIComponent(name).replace(/[!'()*]/g, '\\$&'); //Mã hóa và lọc dữ liệu
+          element.className = element.className.replace(new RegExp('(\\s|^)' + encodedName + '(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
         }
       }
     }
@@ -2386,10 +2388,14 @@ function defineSequence(imagesLoaded, Hammer) {
 
           // Does the browser support pushstate?
           self.hasPushstate = !!(window.history && history.pushState);
-
+		  
+		  
+		  
           // Get the current hashTag
           newHashTag = location.hash.replace("#!", "");
-
+		  newHashTag = encodeURIComponent(newHashTag)
+		  
+		  
           // Get each step's hashTag
           self.stepHashTags = this.getStepHashTags();
 
@@ -2810,7 +2816,11 @@ function defineSequence(imagesLoaded, Hammer) {
 
           // Convert the preloader to an array
           self.$preloader = [self.$preloader];
-
+		  
+		  
+		  //Sanitize input from document location before using it in innerHTML
+		  var sanitizedLocation = escape(location.href.split("#!")[1]);
+		  
           // Use the fallback preloader if CSS keyframes or SVG aren't supported
           if (Modernizr.prefixed("animation") !== false && Modernizr.svg === true) {
             self.$preloader[0].innerHTML = self.preload.defaultHtml;
@@ -3018,11 +3028,13 @@ function defineSequence(imagesLoaded, Hammer) {
 
             var newHashTag,
                 id;
-
+			
             // Get the hashTag from the URL
             newHashTag = e.newURL || location.href;
             newHashTag = newHashTag.split("#!")[1];
-
+			newHashTag = encodeURIComponent(newHashTag);
+			
+			
             // Go to the new step if we're not already on it
             if (self.currentHashTag !== newHashTag) {
 

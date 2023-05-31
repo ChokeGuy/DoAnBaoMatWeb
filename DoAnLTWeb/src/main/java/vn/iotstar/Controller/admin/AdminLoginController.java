@@ -47,8 +47,8 @@ public class AdminLoginController extends HttpServlet {
 		try {
 			if (admin_check != null) {
 				HttpSession session = request.getSession();
-				session.setAttribute("admin-username", username);
-				session.setAttribute("admin-password", password);
+				session.setAttribute("admin-username", filteredUsername);
+				session.setAttribute("admin-password", filteredPassword);
 				response.sendRedirect(request.getContextPath() + "/admin/homepage");
 			} else {
 				request.setAttribute("errorMessage", "Tài khoản hoặc mật khẩu không chính xác !!!");

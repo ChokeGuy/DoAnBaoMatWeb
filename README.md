@@ -1,4 +1,4 @@
-Đây là đồ án lập trình kết hợp với việc bảo mật web
+Đây là đồ án lập trình kết hợp với việc bảo mật web (Web bán nông sản)
 
 Cách sử dụng: 
 - Clone project về máy sử dụng câu lệnh trong terminal : git clone https://github.com/ChokeGuy/DoAnBaoMatWeb.git
